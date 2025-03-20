@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
 {
@@ -21,7 +22,7 @@ class UsersTableSeeder extends Seeder
                 'username' => 'Xalvix',
                 'email' => 's.perezranchal@gmail.com',
                 'age' => '27',
-                'password' => 'No12345.',
+                'password' => Hash::make('No12345.'),
 
             ], [
                 'name' => 'Juan',
@@ -29,7 +30,7 @@ class UsersTableSeeder extends Seeder
                 'username' => 'juanxo123',
                 'email' => 'juanxo@gmail.com',
                 'age' => '22',
-                'password' => 'No12345.',
+                'password' => Hash::make('No12345.'),
 
             ], [
                 'name' => 'María',
@@ -37,7 +38,7 @@ class UsersTableSeeder extends Seeder
                 'username' => 'mery123',
                 'email' => 'mery@gmail.com',
                 'age' => '30',
-                'password' => 'No12345',
+                'password' => Hash::make('No12345.'),
 
             ], [
                 'name' => 'Encarna',
@@ -45,7 +46,7 @@ class UsersTableSeeder extends Seeder
                 'username' => 'encarna123',
                 'email' => 'encarna@gmail.com',
                 'age' => '40',
-                'password' => 'No12345',
+                'password' => Hash::make('No12345.'),
 
             ], [
                 'name' => 'Pablo',
@@ -53,7 +54,7 @@ class UsersTableSeeder extends Seeder
                 'username' => 'enanomove',
                 'email' => 'enanomove@gmail.com',
                 'age' => '50',
-                'password' => 'No12345',
+                'password' => Hash::make('No12345.'),
 
             ],
         ]);

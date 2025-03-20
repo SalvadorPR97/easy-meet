@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerifyEmail;
+use App\Mail\PasswordResetCode;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
@@ -16,16 +19,36 @@ class AuthController extends Controller
         //validaciones de campos que viajan en la request
         $request->validate([
             'name' => 'required|string|max:255',
+            'surname' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8'
+            'age' => 'required|string',
+            'password' => 'required|string|min:8',
+            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         //en caso de cumplir las validaciones, se crea el nuevo usuario en bbdd
         $user = User::create([
             'name' => $request->name,
+            'surname' => $request->surname,
+            'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'age' => $request->age,
+            'password' => Hash::make($request->password),
+            'profile_pic' => $request->profile_pic,
         ]);
+
+        if ($request->hasFile('profile_pic')) {
+            $folderPath = "profile_pics/{$user->id}"; // Carpeta con el ID del usuario
+            $imageName = $request->file('profile_pic')->hashName(); // Nombre único
+            $imagePath = $request->file('profile_pic')->storeAs($folderPath, $imageName, 'public');
+
+            // Guardamos la ruta en la base de datos
+            $user->update(['profile_pic' => $imagePath]);
+        }
+
+        //Envío de email de confirmación de la cuenta
+        Mail::to($request->email)->send(new VerifyEmail($request->email));
 
         //se devuelve respuesta con los datos del nuevo usuario
         return response()->json(['data' => ['user' => $user]]);
@@ -70,7 +93,7 @@ class AuthController extends Controller
         $request->validate(['email' => 'required|email|exists:users']);
 
         //en caso de cumplir las validaciones, se genera un código aleatorio
-        $codigo = rand(0000, 9999);
+        $codigo = rand(000000, 999999);
 
         //se eliminan de la tabla password_resets de bbdd
         //todos los registros de códigos asociados al email que llega cómo entrada
@@ -89,6 +112,8 @@ class AuthController extends Controller
         //en un proceso real, tendriamos que añadir desarrollo aquí
         //para enviar por email el código generado, y que el usuario
         //pudiese continuar con el segundo paso del proceso
+        // Enviar el código por correo
+        Mail::to($request->email)->send(new PasswordResetCode($codigo));
 
         //se devuelve la salida con un mensaje informativo
         return ['message' => 'envío realizado', 'codigo' => $codigo];
@@ -98,7 +123,8 @@ class AuthController extends Controller
         //validaciones de campos que viajan en la request
         $request->validate(['email' => 'required|email|exists:users',
             'password' => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required','token' => 'required']);
+            'password_confirmation' => 'required',
+            'token' => 'required']);
 
         //en caso de cumplir las validaciones, se consulta en bbdd si el código (token)
         //es el que está asociado al email en la tabla password_resets
@@ -112,7 +138,7 @@ class AuthController extends Controller
         //en este caso se implementa para que expire en un minuto
         //en caso de haber expirado se devuelve error
         $fechaActual=Carbon::now();
-        $fechaCodMasUnMin=Carbon::parse($updatePassword->created_at)->addMinute(1);
+        $fechaCodMasUnMin=Carbon::parse($updatePassword->created_at)->addHours(5);
         if($fechaActual->gt($fechaCodMasUnMin)) {return response()->json(['message' => 'Código expirado'], 401);}
 
         //en caso de superar todas las validaciones, se actualiza la password hasheada en bbdd

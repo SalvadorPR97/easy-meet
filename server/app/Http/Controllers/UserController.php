@@ -53,4 +53,8 @@ class UserController extends Controller
         $user->save();
         return response()->json(['user' => $user]);
     }
+
+    public function verifyEmail(Request $request){
+
+    }
 }
