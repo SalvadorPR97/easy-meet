@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +20,9 @@ class UserController extends Controller
     public function updatePassword(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'newPassword' => 'confirmed'
+            'password' => 'required|string',
+            'newPassword' => 'required|string|confirmed',
+            'newPassword_confirmation' => 'required|string'
         ]);
         if ($validator->fails()) {
             return response()->json(['message' => 'Las contraseñas no coinciden'], 400);
@@ -42,19 +45,19 @@ class UserController extends Controller
      */
     public function updateProfilePic(Request $request)
     {
-        $request->validate([
-            'profile_picture' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048'
+        $validator = Validator::make($request->all(), [
+            'profile_pic' => 'required|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        $path = $request->file('profile_picture')->store('public/profile_pictures');
-
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Formato de imagen incorrecto'], 400);
+        }
         $user = auth()->user();
+
+        $path = $request->file('profile_pic')->store('public/profile_pics/' . $user->id);
         $user->profile_pic = Storage::url($path);
         $user->save();
-        return response()->json(['user' => $user]);
+        return response()->json(['message' => "Imagen actualizada"]);
     }
 
-    public function verifyEmail(Request $request){
-
-    }
 }

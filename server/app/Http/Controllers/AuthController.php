@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\VerifyEmail;
 use App\Mail\PasswordResetCode;
+use App\Mail\VerifyEmail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -11,22 +11,27 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
         //validaciones de campos que viajan en la request
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'surname' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'age' => 'required|string',
             'password' => 'required|string|min:8',
-            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Campos incorrectos'], 400);
+        }
         //en caso de cumplir las validaciones, se crea el nuevo usuario en bbdd
         $user = User::create([
             'name' => $request->name,
@@ -35,16 +40,12 @@ class AuthController extends Controller
             'email' => $request->email,
             'age' => $request->age,
             'password' => Hash::make($request->password),
-            'profile_pic' => $request->profile_pic,
         ]);
 
         if ($request->hasFile('profile_pic')) {
-            $folderPath = "profile_pics/{$user->id}"; // Carpeta con el ID del usuario
-            $imageName = $request->file('profile_pic')->hashName(); // Nombre único
-            $imagePath = $request->file('profile_pic')->storeAs($folderPath, $imageName, 'public');
-
-            // Guardamos la ruta en la base de datos
-            $user->update(['profile_pic' => $imagePath]);
+            $path = $request->file('profile_pic')->store('public/profile_pics/' . $user->id);
+            $user->profile_pic = Storage::url($path);
+            $user->save();
         }
 
         //Envío de email de confirmación de la cuenta
@@ -57,11 +58,14 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         //validaciones de campos que viajan en la request
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'email' => 'required|string',
             'password' => 'required|string'
         ]);
 
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Campos incorrectos'], 400);
+        }
         //en caso de cumplir las validaciones, se comprueban las credenciales
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json(['message' => 'Credenciales incorrectas'], 401);
@@ -90,8 +94,10 @@ class AuthController extends Controller
     public function regenerateCode(Request $request)
     {
         //validaciones de campos que viajan en la request
-        $request->validate(['email' => 'required|email|exists:users']);
-
+        $validator = Validator::make($request->all(), ['email' => 'required|email|exists:users']);
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Email incorrecto'], 400);
+        }
         //en caso de cumplir las validaciones, se genera un código aleatorio
         $codigo = rand(000000, 999999);
 
@@ -118,28 +124,36 @@ class AuthController extends Controller
         //se devuelve la salida con un mensaje informativo
         return ['message' => 'envío realizado', 'codigo' => $codigo];
     }
+
     public function regeneratePassword(Request $request)
     {
         //validaciones de campos que viajan en la request
-        $request->validate(['email' => 'required|email|exists:users',
+        $validator = Validator::make($request->all(), ['email' => 'required|email|exists:users',
             'password' => 'required|string|min:8|confirmed',
             'password_confirmation' => 'required',
             'token' => 'required']);
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Campos incorrectos'], 400);
+        }
 
         //en caso de cumplir las validaciones, se consulta en bbdd si el código (token)
         //es el que está asociado al email en la tabla password_resets
         $updatePassword = DB::table('password_resets')
-            ->where(['email' => $request->email,'token' => $request->token])->first();
+            ->where(['email' => $request->email, 'token' => $request->token])->first();
 
         //si no se encuentra registro en la consulta anterior, se devuelve error
-        if (!$updatePassword) {return response()->json(['message' => 'Código inválido'], 401);}
+        if (!$updatePassword) {
+            return response()->json(['message' => 'Código inválido'], 401);
+        }
 
         //esta parte es para ver si el código ha expirado
         //en este caso se implementa para que expire en un minuto
         //en caso de haber expirado se devuelve error
-        $fechaActual=Carbon::now();
-        $fechaCodMasUnMin=Carbon::parse($updatePassword->created_at)->addHours(5);
-        if($fechaActual->gt($fechaCodMasUnMin)) {return response()->json(['message' => 'Código expirado'], 401);}
+        $fechaActual = Carbon::now();
+        $fechaCodMasUnMin = Carbon::parse($updatePassword->created_at)->addHours(5);
+        if ($fechaActual->gt($fechaCodMasUnMin)) {
+            return response()->json(['message' => 'Código expirado'], 401);
+        }
 
         //en caso de superar todas las validaciones, se actualiza la password hasheada en bbdd
         User::where('email', $request->email)->update(['password' => Hash::make($request->password)]);
@@ -151,8 +165,17 @@ class AuthController extends Controller
         return ['message' => 'Contraseña modificada correctamente'];
     }
 
+    public function verifyEmail($email)
+    {
+        $user = User::where('email', $email)->firstOrFail();
+        $user->email_verified_at = Carbon::now();
+        $user->verified = true;
+        $user->save();
+        return ['message' => 'Email verificado correctamente'];
+    }
+
     public function user()
     {
-        return response()->json(['data'=>['user' => auth()->user()]]);
+        return response()->json(['data' => ['user' => auth()->user()]]);
     }
 }

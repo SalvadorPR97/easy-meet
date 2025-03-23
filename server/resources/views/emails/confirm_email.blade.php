@@ -8,7 +8,7 @@
 <body>
 <p>Hola,</p>
 <p>Para verificar tu email pincha en el siguiente enlace:</p>
-<a href="{{   }}">
+<a href="{{ url( route( 'verifyEmail', $email))  }}">
     <button type="button">Confirmar cuenta</button></a>
 <p>Si no has sido tu, puedes ignorar este mensaje.</p>
 </body>
