@@ -25,7 +25,7 @@ class UserController extends Controller
             'newPassword_confirmation' => 'required|string'
         ]);
         if ($validator->fails()) {
-            return response()->json(['message' => 'Las contraseñas no coinciden'], 400);
+            return response()->json(['message' => 'Las contraseñas no coinciden'], 422);
         }
         $user = auth()->user();
         if (Hash::check($request->password, $user->password)) {
@@ -33,7 +33,7 @@ class UserController extends Controller
             $user->save();
             return response()->json(['user' => $user]);
         }
-        return response()->json(['message' => 'Contraseña actual errónea'], 400);
+        return response()->json(['message' => 'Contraseña actual errónea'], 422);
     }
 
     /**
@@ -50,7 +50,7 @@ class UserController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Formato de imagen incorrecto'], 400);
+            return response()->json(['message' => 'Formato de imagen incorrecto'], 422);
         }
         $user = auth()->user();
 

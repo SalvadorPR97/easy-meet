@@ -30,7 +30,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Campos incorrectos'], 400);
+            return response()->json(['message' => 'Campos incorrectos'], 422);
         }
         //en caso de cumplir las validaciones, se crea el nuevo usuario en bbdd
         $user = User::create([
@@ -64,11 +64,11 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => 'Campos incorrectos'], 400);
+            return response()->json(['message' => 'Campos incorrectos'], 422);
         }
         //en caso de cumplir las validaciones, se comprueban las credenciales
         if (!Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['message' => 'Credenciales incorrectas'], 401);
+            return response()->json(['message' => 'Credenciales incorrectas'], 422);
         }
 
         //en caso de credenciales correctas, se recupera la información del usuario
@@ -96,7 +96,7 @@ class AuthController extends Controller
         //validaciones de campos que viajan en la request
         $validator = Validator::make($request->all(), ['email' => 'required|email|exists:users']);
         if ($validator->fails()) {
-            return response()->json(['message' => 'Email incorrecto'], 400);
+            return response()->json(['message' => 'Email incorrecto'], 404);
         }
         //en caso de cumplir las validaciones, se genera un código aleatorio
         $codigo = rand(000000, 999999);
@@ -133,7 +133,7 @@ class AuthController extends Controller
             'password_confirmation' => 'required',
             'token' => 'required']);
         if ($validator->fails()) {
-            return response()->json(['message' => 'Campos incorrectos'], 400);
+            return response()->json(['message' => 'Campos incorrectos'], 422);
         }
 
         //en caso de cumplir las validaciones, se consulta en bbdd si el código (token)
@@ -143,7 +143,7 @@ class AuthController extends Controller
 
         //si no se encuentra registro en la consulta anterior, se devuelve error
         if (!$updatePassword) {
-            return response()->json(['message' => 'Código inválido'], 401);
+            return response()->json(['message' => 'Código inválido'], 422);
         }
 
         //esta parte es para ver si el código ha expirado
@@ -152,7 +152,7 @@ class AuthController extends Controller
         $fechaActual = Carbon::now();
         $fechaCodMasUnMin = Carbon::parse($updatePassword->created_at)->addHours(5);
         if ($fechaActual->gt($fechaCodMasUnMin)) {
-            return response()->json(['message' => 'Código expirado'], 401);
+            return response()->json(['message' => 'Código expirado'], 422);
         }
 
         //en caso de superar todas las validaciones, se actualiza la password hasheada en bbdd
