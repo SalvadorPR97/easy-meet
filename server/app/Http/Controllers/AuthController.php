@@ -91,6 +91,11 @@ class AuthController extends Controller
         return ['message' => 'Usuario deslogado'];
     }
 
+    public function user()
+    {
+        return response()->json(['data' => ['user' => auth()->user()]]);
+    }
+
     public function regenerateCode(Request $request)
     {
         //validaciones de campos que viajan en la request
@@ -172,10 +177,5 @@ class AuthController extends Controller
         $user->verified = true;
         $user->save();
         return ['message' => 'Email verificado correctamente'];
-    }
-
-    public function user()
-    {
-        return response()->json(['data' => ['user' => auth()->user()]]);
     }
 }

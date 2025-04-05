@@ -6,18 +6,28 @@ use Tests\TestCase;
 
 class ApiAuthTest extends TestCase
 {
-    private function login()
+    /**
+     * @dataProvider login_provider
+     */
+    public function test_login($request, $httpCode, $JsonStructure)
     {
-        $responseLogin = $this->json('POST', '/api/login', [
-            'email' => 's.perezranchal@gmail.com',
-            'password' => 'No12345.'
+        $response = $this->json('POST', '/api/login', [
+            'email' => $request['email'],
+            'password' => $request['password'],
         ]);
-        return $responseLogin['data']['accessToken'];
+
+        $response->assertStatus($httpCode);
+        $response->assertJsonStructure($JsonStructure);
     }
 
-    private function logout($token)
+    public function login_provider()
     {
-        $this->withHeaders(["Authorization" => "Bearer $token"])->json('GET', '/api/logout');
+        return [
+            "ok" => [
+                ['email' => 's.perezranchal@gmail.com', 'password' => 'No12345.'], 200, ['data']],
+            "ko" => [
+                ['email' => 's.perezranchal@gmail.com', 'password' => 'test.'], 422, ['message']]
+        ];
     }
 
     /**
@@ -44,15 +54,26 @@ class ApiAuthTest extends TestCase
             "ok" => [
                 ['name' => 'Mariano', 'surname' => 'Delgado', 'username' => 'MetrosexualPensador',
                     'email' => 'ignorantedelavida@gmail.com', 'age' => '68', 'password' => 'No12345.'],
-                200,
-                ['data' => ['user']]
-            ],
+                200, ['data' => ['user']]],
             "ko" => [
                 ['name' => 'Mariano', 'surname' => 'Delgado', 'username' => 'MetrosexualPensador',
                     'email' => 'ignorantedelavida@gmail.com', 'age' => '68', 'password' => 'No12345.'],
-                422,
-                ['message']
-            ]
+                422, ['message']]
         ];
     }
+
+    private function login()
+    {
+        $responseLogin = $this->json('POST', '/api/login', [
+            'email' => 's.perezranchal@gmail.com',
+            'password' => 'No12345.'
+        ]);
+        return $responseLogin['data']['accessToken'];
+    }
+
+    private function logout($token)
+    {
+        $this->withHeaders(["Authorization" => "Bearer $token"])->json('GET', '/api/logout');
+    }
+
 }

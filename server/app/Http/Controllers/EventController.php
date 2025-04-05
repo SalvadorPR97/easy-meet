@@ -19,6 +19,7 @@ class EventController extends Controller
         $events = Event::all();
         return response()->json(['events' => $events]);
     }
+
     /**
      * Display a listing of events filtered by city.
      *
@@ -33,7 +34,7 @@ class EventController extends Controller
     /**
      * Store a newly created event in the DB.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
@@ -69,7 +70,7 @@ class EventController extends Controller
     /**
      * Display the specified event.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
