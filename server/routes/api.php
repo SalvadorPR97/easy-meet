@@ -24,6 +24,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::patch('/changeProfilePic', [UserController::class, 'updateProfilePic']);
 
         Route::post('events/store', [EventController::class, 'store'])->name('events.store');
+        Route::delete('events/delete', [EventController::class, 'delete'])->name('events.delete');
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);

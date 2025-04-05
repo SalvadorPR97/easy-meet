@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Tests\TestCase;
 
 class ApiAuthTest extends TestCase
@@ -46,6 +47,9 @@ class ApiAuthTest extends TestCase
 
         $response->assertStatus($httpCode);
         $response->assertJsonStructure($JsonStructure);
+        if ($httpCode === 201) {
+            User::where('email', $request['email'])->delete();
+        }
     }
 
     public function register_provider()
@@ -57,7 +61,7 @@ class ApiAuthTest extends TestCase
                 201, ['data' => ['user']]],
             "ko" => [
                 ['name' => 'Mariano', 'surname' => 'Delgado', 'username' => 'MetrosexualPensador',
-                    'email' => 'ignorantedelavida@gmail.com', 'age' => '68', 'password' => 'No12345.'],
+                    'email' => 'enanomove@gmail.com', 'age' => '68', 'password' => 'No12345.'],
                 422, ['message']]
         ];
     }

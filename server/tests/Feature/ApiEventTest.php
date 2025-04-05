@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Event;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ApiEventTest extends TestCase
@@ -61,19 +63,48 @@ class ApiEventTest extends TestCase
 
         $response->assertStatus($httpCode);
         $response->assertJsonStructure($JsonStructure);
+        /*if ($httpCode === 201) {
+            Event::where('title', $request['title'])->delete();
+        }*/
     }
 
     public function eventStore_provider()
     {
         return [
             "ok" => [
-                ['title' => 'Concierto de rock', 'location' => 'lugar del concierto', 'city' => 'Marbella',
+                ['title' => 'Concierto de rockkkkk', 'location' => 'lugar del concierto', 'city' => 'Marbella',
                     'date' => '2025-08-04', 'start_time' => '12:00', 'end_time' => '15:00',
                     'description' => 'un concierto', 'category_id' => '1', 'subcategory_id' => '1'], 201, ['data' => ['message', 'event']]],
             "ko" => [
                 ['title' => '', 'location' => 'lugar del concierto', 'city' => 'Marbella',
                     'date' => '2025-08-04', 'start_time' => '12:00', 'end_time' => '15:00',
                     'description' => 'un concierto', 'category_id' => '1', 'subcategory_id' => '1'], 422, ['message', 'error']],
+        ];
+    }
+    /**
+     * @dataProvider eventDelete_provider
+     */
+    public function test_eventDelete($request, $httpCode, $JsonStructure)
+    {
+
+        $token = $this->login();
+        $response = $this->json('DELETE', '/api/events/delete', [
+            'event_id' => $request['event_id'],
+        ], ['Authorization' => "Bearer $token"]);
+
+        $response->assertStatus($httpCode);
+        $response->assertJsonStructure($JsonStructure);
+
+    }
+
+    public function eventDelete_provider()
+    {
+        return [
+            "ok" => [
+                ['event_id' => '6'], 200, ['event']
+            ],
+            //"ko" => [
+            //    ['event_id' => '22'], 401, ['messsage']],
         ];
     }
 }

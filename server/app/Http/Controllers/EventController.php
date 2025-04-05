@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +13,7 @@ class EventController extends Controller
     /**
      * Display a listing of events.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function index()
     {
@@ -23,7 +24,7 @@ class EventController extends Controller
     /**
      * Display a listing of events filtered by city.
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function indexByCity(string $city)
     {
@@ -37,8 +38,8 @@ class EventController extends Controller
     /**
      * Store a newly created event in the DB.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
     public function store(Request $request)
     {
@@ -74,11 +75,28 @@ class EventController extends Controller
      * Display the specified event.
      *
      * @param int $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show($id)
     {
         $event = Event::find($id);
         return response()->json(['event' => $event]);
+    }
+    /**
+     * Display the specified event.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function delete(Request $request)
+    {
+        $userId = auth()->id();
+
+        $event = Event::findOrFail($request['event_id']);
+        if ($event->owner_id == $userId || $event->owner_id == 1) {
+            $event->delete();
+            return response()->json(['event' => $event]);
+        }
+        return response()->json(['message' => 'Solo el usuario que lo crea o un administrador puede eliminar este evento'], 401);
     }
 }
