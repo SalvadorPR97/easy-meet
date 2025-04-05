@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,12 +21,17 @@ Route::group(['middleware' => ['cors']], function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [AuthController::class, 'user']);
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/changePassword', [UserController::class, 'updatePassword']);
-        Route::post('/changeProfilePic', [UserController::class, 'updateProfilePic']);
+        Route::patch('/changePassword', [UserController::class, 'updatePassword']);
+        Route::patch('/changeProfilePic', [UserController::class, 'updateProfilePic']);
+
+        Route::post('events/store', [EventController::class, 'store'])->name('events.store');
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
     Route::post('password/email', [AuthController::class, 'regenerateCode']);
     Route::post('password/change', [AuthController::class, 'regeneratePassword']);
     Route::get('verifyEmail/{email}', [AuthController::class, 'verifyEmail'])->name('verifyEmail');
+
+    Route::get('events/{city}', [EventController::class, 'indexByCity'])->name('events.indexByCity');
+
 });

@@ -17,16 +17,17 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('location');
-            $table->string('image_url');
+            $table->string('city');
+            $table->string('image_url')->nullable();
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
             $table->string('description');
             $table->boolean('only_women')->default(false);
             $table->boolean('only_men')->default(false);
-            $table->foreignId('category_id')->constrained('categories')->onDelete('no action')->onUpdate('no action');
-            $table->foreignId('subcategory_id')->constrained('subcategories')->onDelete('no action')->onUpdate('no action');
-            $table->foreignId('owner_id')->constrained('users')->onDelete('no action')->onUpdate('no action');
+            $table->foreignId('category_id')->constrained('categories')->onDelete('no action');
+            $table->foreignId('subcategory_id')->constrained('subcategories')->onDelete('no action');
+            $table->foreignId('owner_id')->constrained('users')->onDelete('no action');
             $table->timestamps();
         });
     }
