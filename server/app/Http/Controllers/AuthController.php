@@ -52,7 +52,7 @@ class AuthController extends Controller
         Mail::to($request->email)->send(new VerifyEmail($request->email));
 
         //se devuelve respuesta con los datos del nuevo usuario
-        return response()->json(['data' => ['user' => $user]]);
+        return response()->json(['data' => ['user' => $user]], 201);
     }
 
     public function login(Request $request)

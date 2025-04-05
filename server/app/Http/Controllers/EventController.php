@@ -28,6 +28,9 @@ class EventController extends Controller
     public function indexByCity(string $city)
     {
         $events = Event::where('city', $city)->get();
+        if ($events->isEmpty()) {
+            return response()->json(['message' => "No hay eventos disponibles para esta ciudad"]);
+        }
         return response()->json(['events' => $events]);
     }
 
@@ -52,7 +55,7 @@ class EventController extends Controller
             'subcategory_id' => 'required|exists:subcategories,id',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['message' => 'Datos erróneos', 'error' => $validator->errors()], 422);
         }
         $data = $request->all();
         $data['owner_id'] = auth()->id();
@@ -64,7 +67,7 @@ class EventController extends Controller
             $event->save();
         }
 
-        return response()->json(['data' => ['message' => 'Evento creado correctamente', 'event' => $event]]);
+        return response()->json(['data' => ['message' => 'Evento creado correctamente', 'event' => $event]], 201);
     }
 
     /**

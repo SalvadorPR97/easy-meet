@@ -54,7 +54,7 @@ class ApiAuthTest extends TestCase
             "ok" => [
                 ['name' => 'Mariano', 'surname' => 'Delgado', 'username' => 'MetrosexualPensador',
                     'email' => 'ignorantedelavida@gmail.com', 'age' => '68', 'password' => 'No12345.'],
-                200, ['data' => ['user']]],
+                201, ['data' => ['user']]],
             "ko" => [
                 ['name' => 'Mariano', 'surname' => 'Delgado', 'username' => 'MetrosexualPensador',
                     'email' => 'ignorantedelavida@gmail.com', 'age' => '68', 'password' => 'No12345.'],
