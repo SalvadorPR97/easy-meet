@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +34,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::post('password/change', [AuthController::class, 'regeneratePassword']);
     Route::get('verifyEmail/{email}', [AuthController::class, 'verifyEmail'])->name('verifyEmail');
 
+    Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
+    Route::get('subcategories/{id}', [SubcategoryController::class, 'index'])->name('category.index');
     Route::get('events/{city}', [EventController::class, 'indexByCity'])->name('events.indexByCity');
 
 });
