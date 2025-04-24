@@ -21,6 +21,9 @@ return new class extends Migration {
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
+            $table->integer('min_participants');
+            $table->integer('max_participants');
+            $table->integer('price');
             $table->string('description');
             $table->boolean('only_women')->default(false);
             $table->boolean('only_men')->default(false);
