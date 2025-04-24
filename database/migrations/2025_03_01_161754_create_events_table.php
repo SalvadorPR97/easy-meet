@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->time('end_time');
             $table->integer('min_participants');
             $table->integer('max_participants');
-            $table->integer('price');
+            $table->double('price');
             $table->string('description');
             $table->boolean('only_women')->default(false);
             $table->boolean('only_men')->default(false);

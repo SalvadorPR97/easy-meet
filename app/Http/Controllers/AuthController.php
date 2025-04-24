@@ -24,7 +24,8 @@ class AuthController extends Controller
             'surname' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
-            'age' => 'required|string',
+            'birthdate' => 'required|date_format:Y-m-d|before:today|after:1900-01-01',
+            'dni' => 'string|max:9|unique:users',
             'password' => 'required|string|min:8',
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
