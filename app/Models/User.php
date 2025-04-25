@@ -22,7 +22,8 @@ class User extends Authenticatable
         'surname',
         'username',
         'email',
-        'age',
+        'birthdate',
+        'dni',
         'password',
         'profile_pic'
     ];
@@ -44,6 +45,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'birthdate' => 'date',
     ];
 
     public function events()

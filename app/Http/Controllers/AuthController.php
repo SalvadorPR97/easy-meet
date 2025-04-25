@@ -24,13 +24,12 @@ class AuthController extends Controller
             'surname' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
-            'age' => 'required|string',
+            'birthdate' => 'required|date_format:Y-m-d|before:today|after:1900-01-01',
             'password' => 'required|string|min:8',
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
         if ($validator->fails()) {
-            return response()->json(['message' => 'Campos incorrectos'], 422);
+            return response()->json(['message' => 'Campos incorrectos', 'errors' => $validator->errors()], 422);
         }
         //en caso de cumplir las validaciones, se crea el nuevo usuario en bbdd
         $user = User::create([
@@ -38,7 +37,7 @@ class AuthController extends Controller
             'surname' => $request->surname,
             'username' => $request->username,
             'email' => $request->email,
-            'age' => $request->age,
+            'birthdate' => $request->birthdate,
             'password' => Hash::make($request->password),
         ]);
 

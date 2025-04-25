@@ -20,7 +20,10 @@ return new class extends Migration {
             $table->string('image_url')->nullable();
             $table->date('date');
             $table->time('start_time');
-            $table->time('end_time');
+            $table->time('end_time')->nullable();
+            $table->integer('min_participants');
+            $table->integer('max_participants');
+            $table->double('price');
             $table->string('description');
             $table->boolean('only_women')->default(false);
             $table->boolean('only_men')->default(false);
