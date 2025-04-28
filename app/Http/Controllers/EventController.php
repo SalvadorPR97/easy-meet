@@ -101,4 +101,5 @@ class EventController extends Controller
         }
         return response()->json(['message' => 'Solo el usuario que lo crea o un administrador puede eliminar este evento'], 401);
     }
+    //public function eventsCities
 }
