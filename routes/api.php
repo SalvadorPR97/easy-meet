@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventsUsersController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::group(['middleware' => ['cors']], function () {
 
         Route::post('events/store', [EventController::class, 'store'])->name('events.store');
         Route::delete('events/delete', [EventController::class, 'delete'])->name('events.delete');
+
+        Route::post('eventsUsers/join/{id}', [EventsUsersController::class, 'joinEvent'])->name('eventsUsers.join');
+        Route::get('eventsUsers/joined', [EventsUsersController::class, 'joinedEvents'])->name('eventsUsers.getJoinedEvents');
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
