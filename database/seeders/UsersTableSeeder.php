@@ -21,6 +21,7 @@ class UsersTableSeeder extends Seeder
                 'surname' => 'Pérez Ranchal',
                 'username' => 'Xalvix',
                 'email' => 's.perezranchal@gmail.com',
+                'city' => 'Málaga',
                 'birthdate' => '1997-03-10',
                 'password' => Hash::make('No12345.'),
 
@@ -29,6 +30,7 @@ class UsersTableSeeder extends Seeder
                 'surname' => 'Pérez Gómez',
                 'username' => 'juanxo123',
                 'email' => 'juanxo@gmail.com',
+                'city' => 'Marbella',
                 'birthdate' => '1987-03-10',
                 'password' => Hash::make('No12345.'),
 
@@ -37,6 +39,7 @@ class UsersTableSeeder extends Seeder
                 'surname' => 'Jiménez Llum',
                 'username' => 'mery123',
                 'email' => 'mery@gmail.com',
+                'city' => 'Málaga',
                 'birthdate' => '1967-03-10',
                 'password' => Hash::make('No12345.'),
 
@@ -45,6 +48,7 @@ class UsersTableSeeder extends Seeder
                 'surname' => 'Vales Libro',
                 'username' => 'encarna123',
                 'email' => 'encarna@gmail.com',
+                'city' => 'Málaga',
                 'birthdate' => '2000-03-10',
                 'password' => Hash::make('No12345.'),
 
@@ -53,6 +57,7 @@ class UsersTableSeeder extends Seeder
                 'surname' => 'Motos',
                 'username' => 'enanomove',
                 'email' => 'enanomove@gmail.com',
+                'city' => 'Madrid',
                 'birthdate' => '1966-03-10',
                 'password' => Hash::make('No12345.'),
 
