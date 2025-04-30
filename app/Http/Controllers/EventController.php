@@ -36,6 +36,51 @@ class EventController extends Controller
     }
 
     /**
+     * Display a listing of events filtered by city.
+     *
+     * @return JsonResponse
+     */
+    public function filteredEvents(Request $request)
+    {
+        $query = Event::query()
+            ->when($request->city, fn($q, $v) => $q->where('city', $v))
+            ->when($request->category_id, fn($q, $v) => $q->where('category_id', $v))
+            ->when($request->subcategory_id, fn($q, $v) => $q->where('subcategory_id', $v));
+
+        $events = $query->get();
+
+        return response()->json(['events' => $events]);
+    }
+
+    /**
+     * Display a listing of events filtered by category.
+     *
+     * @return JsonResponse
+     */
+    public function indexByCategory(string $category)
+    {
+        $events = Event::where('category_id', $category)->get();
+        if ($events->isEmpty()) {
+            return response()->json(['message' => "No hay eventos disponibles de esta categoría"]);
+        }
+        return response()->json(['events' => $events]);
+    }
+
+    /**
+     * Display a listing of events filtered by category.
+     *
+     * @return JsonResponse
+     */
+    public function indexBySubcategory(string $subcategory)
+    {
+        $events = Event::where('subcategory_id', $subcategory)->get();
+        if ($events->isEmpty()) {
+            return response()->json(['message' => "No hay eventos disponibles de esta categoría"]);
+        }
+        return response()->json(['events' => $events]);
+    }
+
+    /**
      * Store a newly created event in the DB.
      *
      * @param Request $request
