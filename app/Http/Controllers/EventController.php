@@ -84,6 +84,7 @@ class EventController extends Controller
         $event = Event::find($id);
         return response()->json(['event' => $event]);
     }
+
     /**
      * Display the specified event.
      *
@@ -101,5 +102,13 @@ class EventController extends Controller
         }
         return response()->json(['message' => 'Solo el usuario que lo crea o un administrador puede eliminar este evento'], 401);
     }
-    //public function eventsCities
+
+    public function cities()
+    {
+        $events = Event::all();
+        $cities = $events->pluck('city')->countBy()->map(function ($count, $city) {
+            return ['name' => $city, 'count' => $count];
+        })->values();
+        return response()->json(['cities' => $cities]);
+    }
 }
