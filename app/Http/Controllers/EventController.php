@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,17 @@ class EventController extends Controller
      */
     public function indexByCity(string $city)
     {
-        $events = Event::where('city', $city)->get();
+        $today = Carbon::today()->toDateString();
+        $nowTime = Carbon::now()->format('H:i');
+        $events = Event::where('city', $city)
+            ->where(function ($query) use ($today, $nowTime) {
+                $query->where('date', '>', $today)
+                    ->orWhere(function ($q) use ($today, $nowTime) {
+                        $q->where('date', $today)
+                            ->where('start_time', '>=', $nowTime);
+                    });
+            })
+            ->get();
         if ($events->isEmpty()) {
             return response()->json(['message' => "No hay eventos disponibles para esta ciudad"]);
         }
@@ -107,7 +118,7 @@ class EventController extends Controller
     }
 
     /**
-     * Display the specified event.
+     * Delete the specified event.
      *
      * @param int $id
      * @return JsonResponse
@@ -131,5 +142,10 @@ class EventController extends Controller
             return ['name' => $city, 'count' => $count];
         })->values();
         return response()->json(['cities' => $cities]);
+    }
+
+    public function eventsByOwner() {
+        $events = Event::where('owner_id', auth()->id())->get();
+        return response()->json(['events' => $events]);
     }
 }
