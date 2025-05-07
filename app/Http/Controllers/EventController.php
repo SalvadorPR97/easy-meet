@@ -133,14 +133,15 @@ class EventController extends Controller
      * @param int $id
      * @return JsonResponse
      */
-    public function delete(Request $request)
+    public function delete(int $id)
     {
         $userId = auth()->id();
 
-        $event = Event::findOrFail($request['event_id']);
+        $event = Event::findOrFail($id);
         if ($event->owner_id == $userId || $event->owner_id == 1) {
+            $event->users()->detach();
             $event->delete();
-            return response()->json(['event' => $event]);
+            return response()->json(['message' => "Evento borrado correctamente"]);
         }
         return response()->json(['message' => 'Solo el usuario que lo crea o un administrador puede eliminar este evento'], 401);
     }
