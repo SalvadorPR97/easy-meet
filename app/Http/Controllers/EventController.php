@@ -53,7 +53,16 @@ class EventController extends Controller
      */
     public function filteredEvents(Request $request)
     {
+        $today = Carbon::today()->toDateString();
+        $nowTime = Carbon::now()->format('H:i');
         $query = Event::query()
+            ->where(function ($query) use ($today, $nowTime) {
+                $query->where('date', '>', $today)
+                    ->orWhere(function ($q) use ($today, $nowTime) {
+                        $q->where('date', $today)
+                            ->where('start_time', '>=', $nowTime);
+                    });
+            })
             ->when($request->city, fn($q, $v) => $q->where('city', $v))
             ->when($request->category_id, fn($q, $v) => $q->where('category_id', $v))
             ->when($request->subcategory_id, fn($q, $v) => $q->where('subcategory_id', $v));
@@ -101,6 +110,7 @@ class EventController extends Controller
             $event->image_url = Storage::url($path);
             $event->save();
         }
+        (new EventsUsersController)->joinEvent($event->id);
 
         return response()->json(['data' => ['message' => 'Evento creado correctamente', 'event' => $event]], 201);
     }
@@ -137,7 +147,15 @@ class EventController extends Controller
 
     public function cities()
     {
-        $events = Event::all();
+        $today = Carbon::today()->toDateString();
+        $nowTime = Carbon::now()->format('H:i');
+        $events = Event::where(function ($query) use ($today, $nowTime) {
+                $query->where('date', '>', $today)
+                    ->orWhere(function ($q) use ($today, $nowTime) {
+                        $q->where('date', $today)
+                            ->where('start_time', '>=', $nowTime);
+                    });
+            })->get();
         $cities = $events->pluck('city')->countBy()->map(function ($count, $city) {
             return ['name' => $city, 'count' => $count];
         })->values();
