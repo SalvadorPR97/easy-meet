@@ -18,6 +18,8 @@ class EventsTableSeeder extends Seeder
             [
                 'title' => 'Concierto Mago de Oz',
                 'location' => 'calle falsa 123',
+                'latitude' => 36.720000,
+                'longitude' => -4.420000,
                 'city' => 'Málaga',
                 'image_url' => '1/nombreImagen.jpg',
                 'date' => '2025-09-11',
@@ -33,6 +35,8 @@ class EventsTableSeeder extends Seeder
             ], [
                 'title' => 'Torneo Tekken 8',
                 'location' => 'calle falsa 120',
+                'latitude' => 32.720000,
+                'longitude' => -4.420000,
                 'city' => 'Málaga',
                 'image_url' => '2/nombreImagen.jpg',
                 'date' => '2025-07-20',
@@ -48,6 +52,8 @@ class EventsTableSeeder extends Seeder
             ], [
                 'title' => 'Partido amateur de baloncesto',
                 'location' => 'pabellón falso 123',
+                'latitude' => 34.720000,
+                'longitude' => -4.420000,
                 'city' => 'Marbella',
                 'image_url' => '3/nombreImagen.jpg',
                 'date' => '2025-09-20',
