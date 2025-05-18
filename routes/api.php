@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventsUsersController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -26,7 +27,11 @@ Route::group(['middleware' => ['cors']], function () {
         Route::patch('/changeProfilePic', [UserController::class, 'updateProfilePic']);
 
         Route::post('events/store', [EventController::class, 'store'])->name('events.store');
-        Route::delete('events/delete', [EventController::class, 'delete'])->name('events.delete');
+        Route::delete('events/delete/{id}', [EventController::class, 'delete'])->name('events.delete');
+
+        Route::post('eventsUsers/join/{id}', [EventsUsersController::class, 'joinEvent'])->name('eventsUsers.join');
+        Route::get('eventsUsers/joined', [EventsUsersController::class, 'joinedEvents'])->name('eventsUsers.getJoinedEvents');
+        Route::get('events/userEvents', [EventController::class, 'eventsByOwner'])->name('event.eventsByOwner');;
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -36,6 +41,9 @@ Route::group(['middleware' => ['cors']], function () {
 
     Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
     Route::get('subcategories/{id}', [SubcategoryController::class, 'index'])->name('category.index');
-    Route::get('events/{city}', [EventController::class, 'indexByCity'])->name('events.indexByCity');
+    Route::get('subcategories/', [SubcategoryController::class, 'getAll'])->name('category.getAll');
+    Route::get('events/cities', [EventController::class, 'cities'])->name('events.cities');
+    Route::get('events/city/{city}', [EventController::class, 'indexByCity'])->name('events.indexByCity');
+    Route::get('events/filter', [EventController::class, 'filteredEvents'])->name('events.filteredEvents');
 
 });

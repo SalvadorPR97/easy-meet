@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->id();
             $table->string('title');
             $table->string('location');
+            $table->double('latitude',11,8);
+            $table->double('longitude',11,8);
             $table->string('city');
             $table->string('image_url')->nullable();
             $table->date('date');
