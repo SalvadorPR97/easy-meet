@@ -24,6 +24,7 @@ class AuthController extends Controller
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'birthdate' => 'required|date_format:Y-m-d|before:today|after:1900-01-01',
+            'city' => 'required',
             'password' => 'required|string|min:8',
             'profile_pic' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -36,6 +37,7 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'birthdate' => $request->birthdate,
+            'city' => $request->city,
             'password' => Hash::make($request->password),
         ]);
 

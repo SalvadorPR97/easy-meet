@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
                 'surname' => 'Pérez Gómez',
                 'username' => 'juanxo123',
                 'email' => 'juanxo@gmail.com',
-                'city' => 'Marbella',
+                'city' => 'Teruel',
                 'birthdate' => '1987-03-10',
                 'password' => Hash::make('No12345.'),
 

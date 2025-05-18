@@ -37,7 +37,7 @@ class EventsTableSeeder extends Seeder
                 'location' => 'Compás de la Victoria, Calle Compás de la Victoria, Cristo de la Epidemia, Centro, Málaga, Málaga-Costa del Sol, Málaga, Andalucía, 29012, España',
                 'latitude' => 36.7273785,
                 'longitude' => -4.413595,
-                'city' => 'Marbella',
+                'city' => 'Teruel',
                 'image_url' => '/storage/events_images/2/zc2NxTI3y4f9QxGYnHlHFUUum6v4Uqs6EDGhpBqs.jpg',
                 'date' => '2025-07-20',
                 'start_time' => '17:00:00',
