@@ -31,7 +31,7 @@ Route::group(['middleware' => ['cors']], function () {
 
         Route::post('eventsUsers/join/{id}', [EventsUsersController::class, 'joinEvent'])->name('eventsUsers.join');
         Route::get('eventsUsers/joined', [EventsUsersController::class, 'joinedEvents'])->name('eventsUsers.getJoinedEvents');
-        Route::get('events/userEvents', [EventController::class, 'eventsByOwner'])->name('event.eventsByOwner');;
+        Route::get('events/userEvents', [EventController::class, 'eventsByOwner'])->name('event.eventsByOwner');
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
