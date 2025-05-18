@@ -41,6 +41,7 @@ Route::group(['middleware' => ['cors']], function () {
 
     Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
     Route::get('subcategories/{id}', [SubcategoryController::class, 'index'])->name('category.index');
+    Route::get('subcategories/', [SubcategoryController::class, 'getAll'])->name('category.getAll');
     Route::get('events/cities', [EventController::class, 'cities'])->name('events.cities');
     Route::get('events/city/{city}', [EventController::class, 'indexByCity'])->name('events.indexByCity');
     Route::get('events/filter', [EventController::class, 'filteredEvents'])->name('events.filteredEvents');

@@ -11,4 +11,8 @@ class SubcategoryController extends Controller
     {
         return Subcategory::where('category_id', $id)->get();
     }
+    public function getAll()
+    {
+        return Subcategory::all();
+    }
 }
