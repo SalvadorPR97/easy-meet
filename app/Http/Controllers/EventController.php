@@ -100,8 +100,10 @@ class EventController extends Controller
             if ($request->hasFile('image')) {
                 $path = $request->file('image')->store('public/events_images/' . $event->id);
                 $event->image_url = Storage::url($path);
-                $event->save();
+            } else {
+                $event->image_url = Storage::url('public/events_images/default/selfieCine.jpg');
             }
+            $event->save();
 
             (new EventsUsersController)->joinEvent($event->id);
 
