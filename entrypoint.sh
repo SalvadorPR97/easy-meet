@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Esperar a que MySQL esté listo
 echo "Esperando que la base de datos esté disponible..."
 until nc -z -v -w30 db 3306
 do
@@ -8,7 +7,6 @@ do
   sleep 5
 done
 
-# Comprobar si existe la tabla migrations usando mysql directamente
 TABLE_EXISTS=$(mysql -h db -u root -proot easymeet -e "SHOW TABLES LIKE 'migrations';" | grep migrations)
 
 if [ -z "$TABLE_EXISTS" ]; then
@@ -19,5 +17,11 @@ else
   php artisan migrate --force
 fi
 
-# Arrancar servidor
+if [ -L "/var/www/public/storage" ] || [ -d "/var/www/public/storage" ]; then
+  rm -rf /var/www/public/storage
+fi
+
+# Crear symlink a storage
+php artisan storage:link
+
 php artisan serve --host=0.0.0.0 --port=8000
