@@ -76,6 +76,8 @@ class EventController extends Controller
                 'title' => 'required|string|max:255',
                 'location' => 'required|string|max:255',
                 'city' => 'required|string|max:255',
+                'latitude' => 'required',
+                'longitude' => 'required',
                 'date' => 'required|date_format:Y-m-d',
                 'start_time' => 'required|date_format:H:i',
                 'min_participants' => 'required|integer|min:2',
@@ -111,7 +113,7 @@ class EventController extends Controller
             return response()->json(['data' => ['message' => 'Evento creado correctamente', 'event' => $event]], 201);
         } catch (\Exception $e) {
             Log::error('Evento no creado. Error: ' . $e->getMessage());
-            return response()->json(['message' => 'Error interno'], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
     }
 

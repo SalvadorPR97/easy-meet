@@ -26,7 +26,7 @@ return new class extends Migration {
             $table->integer('min_participants');
             $table->integer('max_participants');
             $table->double('price');
-            $table->string('description');
+            $table->text('description');
             $table->boolean('only_women')->default(false);
             $table->boolean('only_men')->default(false);
             $table->foreignId('category_id')->constrained('categories')->onDelete('no action');

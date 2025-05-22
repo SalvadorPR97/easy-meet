@@ -26,6 +26,7 @@ Route::group(['middleware' => ['cors']], function () {
         Route::patch('/changePassword', [UserController::class, 'updatePassword']);
         Route::patch('/changeProfilePic', [UserController::class, 'updateProfilePic']);
 
+        Route::get('events/all', [EventController::class, 'index'])->name('events.index');
         Route::post('events/store', [EventController::class, 'store'])->name('events.store');
         Route::delete('events/delete/{id}', [EventController::class, 'delete'])->name('events.delete');
 
@@ -35,9 +36,9 @@ Route::group(['middleware' => ['cors']], function () {
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('password/email', [AuthController::class, 'regenerateCode']);
-    Route::post('password/change', [AuthController::class, 'regeneratePassword']);
-    Route::get('verifyEmail/{email}', [AuthController::class, 'verifyEmail'])->name('verifyEmail');
+    Route::post('regenerate-code', [AuthController::class, 'regenerateCode']);
+    Route::post('regenerate-password', [AuthController::class, 'regeneratePassword']);
+    Route::get('verify-email/{email}', [AuthController::class, 'verifyEmail'])->name('verifyEmail');
 
     Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
     Route::get('subcategories/{id}', [SubcategoryController::class, 'index'])->name('category.index');
