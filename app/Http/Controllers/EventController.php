@@ -146,7 +146,7 @@ class EventController extends Controller
         return response()->json(['message' => 'Solo el usuario que lo crea o un administrador puede eliminar este evento'], 401);
     }
 
-    public function cities()
+    public function citiesAll()
     {
         Log::info('Obteniendo ciudades con eventos disponibles...');
         $today = Carbon::today()->toDateString();
@@ -168,11 +168,42 @@ class EventController extends Controller
         return response()->json(['cities' => $cities]);
     }
 
-    public function eventsByOwner()
+    public function cities(int $user_id)
+    {
+        Log::info('Obteniendo ciudades con eventos disponibles...');
+        $today = Carbon::today()->toDateString();
+        $nowTime = Carbon::now()->format('H:i');
+
+        $events = Event::where(function ($query) use ($today, $nowTime) {
+            $query->where('date', '>', $today)
+                ->orWhere(function ($q) use ($today, $nowTime) {
+                    $q->where('date', $today)
+                        ->where('start_time', '>=', $nowTime);
+                });
+        })
+            ->when($user_id, function ($query, $user_id) {
+                return $query->where('owner_id', $user_id);
+            })
+            ->get();
+
+        $cities = $events->pluck('city')->countBy()->map(function ($count, $city) {
+            return ['name' => $city, 'count' => $count];
+        })->values();
+
+        Log::info('Ciudades con eventos obtenidas correctamente. Total: ' . $cities->count());
+        return response()->json(['cities' => $cities]);
+    }
+
+    public function eventsByOwner(Request $request)
     {
         $userId = auth()->id();
         Log::info("Obteniendo eventos creados por el usuario: $userId");
-        $events = Event::where('owner_id', $userId)->get();
+        $query = Event::where('owner_id', $userId)
+            ->when($request->city, fn($q, $v) => $q->where('city', $v))
+            ->when($request->category_id, fn($q, $v) => $q->where('category_id', $v))
+            ->when($request->subcategory_id, fn($q, $v) => $q->where('subcategory_id', $v));
+
+        $events = $query->get();
         Log::info("Total de eventos encontrados: " . $events->count());
         return response()->json(['events' => $events]);
     }

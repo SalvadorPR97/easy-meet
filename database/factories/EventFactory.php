@@ -22,7 +22,7 @@ class EventFactory extends Factory
         return [
             'title' => $this->faker->sentence(3),
             'location' => $this->faker->address,
-            'city' => $this->faker->city,
+            'city' => 'Málaga',
             'date' => $this->faker->dateTimeBetween('+1 day', '+1 month')->format('Y-m-d'),
             'start_time' => $this->faker->time('H:i'),
             'min_participants' => 2,

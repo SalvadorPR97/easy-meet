@@ -31,8 +31,9 @@ Route::group(['middleware' => ['cors']], function () {
         Route::delete('events/delete/{id}', [EventController::class, 'delete'])->name('events.delete');
 
         Route::post('eventsUsers/join/{id}', [EventsUsersController::class, 'joinEvent'])->name('eventsUsers.join');
+        Route::post('eventsUsers/leave/{id}', [EventsUsersController::class, 'leaveEvent'])->name('eventsUsers.leave');
         Route::get('eventsUsers/joined', [EventsUsersController::class, 'joinedEvents'])->name('eventsUsers.getJoinedEvents');
-        Route::get('events/userEvents', [EventController::class, 'eventsByOwner'])->name('event.eventsByOwner');
+        Route::post('events/userEvents', [EventController::class, 'eventsByOwner'])->name('event.eventsByOwner');
     });
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
@@ -43,7 +44,8 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('categories', [CategoryController::class, 'index'])->name('category.index');
     Route::get('subcategories/{id}', [SubcategoryController::class, 'index'])->name('category.index');
     Route::get('subcategories/', [SubcategoryController::class, 'getAll'])->name('category.getAll');
-    Route::get('events/cities', [EventController::class, 'cities'])->name('events.cities');
+    Route::get('events/citiesAll', [EventController::class, 'citiesAll'])->name('events.citiesAll');
+    Route::get('events/cities/{user_id}', [EventController::class, 'cities'])->name('events.cities');
     Route::get('events/city/{city}', [EventController::class, 'indexByCity'])->name('events.indexByCity');
     Route::get('events/filter', [EventController::class, 'filteredEvents'])->name('events.filteredEvents');
 

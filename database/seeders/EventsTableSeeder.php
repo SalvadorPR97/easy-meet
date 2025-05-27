@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Event;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -67,6 +68,8 @@ class EventsTableSeeder extends Seeder
                 'subcategory_id' => 7,
                 'owner_id' => 3,
             ],
-        ]);
+            ]
+        );
+        Event::factory()->count(10)->create();
     }
 }
