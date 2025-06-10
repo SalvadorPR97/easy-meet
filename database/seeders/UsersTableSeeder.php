@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 's.perezranchal@gmail.com',
                 'city' => 'Málaga',
                 'birthdate' => '1997-03-10',
+                'profile_pic' => '/storage/profile_pics/1/fXug8M8AGoF6e1i6NSxJNzEf0TQowuqIU0N36mQ5.jpg',
                 'password' => Hash::make('No12345.'),
 
             ], [
@@ -32,6 +33,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'juanxo@gmail.com',
                 'city' => 'Teruel',
                 'birthdate' => '1987-03-10',
+                'profile_pic' => '/storage/profile_pics/1/fXug8M8AGoF6e1i6NSxJNzEf0TQowuqIU0N36mQ5.jpg',
                 'password' => Hash::make('No12345.'),
 
             ], [
@@ -41,6 +43,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'mery@gmail.com',
                 'city' => 'Málaga',
                 'birthdate' => '1967-03-10',
+                'profile_pic' => '/storage/profile_pics/1/fXug8M8AGoF6e1i6NSxJNzEf0TQowuqIU0N36mQ5.jpg',
                 'password' => Hash::make('No12345.'),
 
             ], [
@@ -50,6 +53,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'encarna@gmail.com',
                 'city' => 'Málaga',
                 'birthdate' => '2000-03-10',
+                'profile_pic' => '/storage/profile_pics/1/fXug8M8AGoF6e1i6NSxJNzEf0TQowuqIU0N36mQ5.jpg',
                 'password' => Hash::make('No12345.'),
 
             ], [
@@ -59,6 +63,7 @@ class UsersTableSeeder extends Seeder
                 'email' => 'enanomove@gmail.com',
                 'city' => 'Madrid',
                 'birthdate' => '1966-03-10',
+                'profile_pic' => '/storage/profile_pics/1/fXug8M8AGoF6e1i6NSxJNzEf0TQowuqIU0N36mQ5.jpg',
                 'password' => Hash::make('No12345.'),
 
             ],

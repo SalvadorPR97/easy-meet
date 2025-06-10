@@ -70,6 +70,5 @@ class EventsTableSeeder extends Seeder
             ],
             ]
         );
-        Event::factory()->count(10)->create();
     }
 }
