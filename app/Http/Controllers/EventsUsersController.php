@@ -63,8 +63,7 @@ class EventsUsersController extends Controller
 
     public function usersInEvent(int $eventId)
     {
-        $user = auth()->user();
-        Log::info("Obteniendo usuarios del evento ID $eventId (solicitado por usuario ID {$user->id})");
+        Log::info("Obteniendo usuarios del evento ID $eventId");
 
         try {
             $event = Event::findOrFail($eventId);

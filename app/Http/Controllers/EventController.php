@@ -14,7 +14,7 @@ class EventController extends Controller
     public function index()
     {
         Log::info('Listando todos los eventos...');
-        $events = Event::all();
+        $events = Event::with('users');
         Log::info('Eventos listados correctamente. Total: ' . $events->count());
         return response()->json(['events' => $events]);
     }
@@ -25,7 +25,8 @@ class EventController extends Controller
         $today = Carbon::today()->toDateString();
         $nowTime = Carbon::now()->format('H:i');
 
-        $events = Event::where('city', $city)
+        $events = Event::with('users')
+        ->where('city', $city)
             ->where(function ($query) use ($today, $nowTime) {
                 $query->where('date', '>', $today)
                     ->orWhere(function ($q) use ($today, $nowTime) {
@@ -50,6 +51,7 @@ class EventController extends Controller
         $nowTime = Carbon::now()->format('H:i');
 
         $query = Event::query()
+            ->with('users')
             ->where(function ($query) use ($today, $nowTime) {
                 $query->where('date', '>', $today)
                     ->orWhere(function ($q) use ($today, $nowTime) {
@@ -120,7 +122,7 @@ class EventController extends Controller
     public function show($id)
     {
         Log::info('Mostrando detalles del evento con ID: ' . $id);
-        $event = Event::find($id);
+        $event = Event::find($id)->with('users')->first();
         if (!$event) {
             Log::warning('Evento no encontrado. ID: ' . $id);
         } else {
@@ -198,7 +200,8 @@ class EventController extends Controller
     {
         $userId = auth()->id();
         Log::info("Obteniendo eventos creados por el usuario: $userId");
-        $query = Event::where('owner_id', $userId)
+        $query = Event::with('users')
+        ->where('owner_id', $userId)
             ->when($request->city, fn($q, $v) => $q->where('city', $v))
             ->when($request->category_id, fn($q, $v) => $q->where('category_id', $v))
             ->when($request->subcategory_id, fn($q, $v) => $q->where('subcategory_id', $v));
